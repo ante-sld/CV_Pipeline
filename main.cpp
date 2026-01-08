@@ -1,8 +1,27 @@
+#include "include/file_reader.h"
+
+#include <opencv2/opencv.hpp>
+#include <spdlog/spdlog.h>
+#include <rapidjson/document.h>
+
 #include <iostream>
+#include <string>
 
-int main() {
 
-    std::cout << "Hello from Computer Vision Pipeline. " << std::endl;
+int main(int argc, const char * argv[]) {
+    spdlog::info("Starting computer vision pipeline.");
 
+    std::string configJson;
+    read_file(argv[1], configJson);
+
+    rapidjson::Document doc;
+    doc.Parse(configJson.c_str());
+
+    if (!doc.IsObject()) {
+        std::cerr << "Error parsing config document. Check config argument." << std::endl;
+        return 1;
+    }
+
+    spdlog::info("Finishing computer vision pipeline.");
     return 0;
 }
