@@ -11,7 +11,12 @@ find_package(OpenCV REQUIRED CONFIG)
 find_package(spdlog REQUIRED CONFIG)
 
 add_executable(cv_pipeline main.cpp
-        src/file_reader.cpp)
+        src/file_reader.cpp
+        include/IVideoSource.h
+        include/FileVideoSource.h
+        src/FileVideoSource.cpp
+        include/Frame.h
+)
 
 target_include_directories(cv_pipeline
         PRIVATE
@@ -21,6 +26,10 @@ target_include_directories(cv_pipeline
 target_link_libraries(cv_pipeline
         PRIVATE
         opencv_core
+        opencv_imgproc
+        opencv_videoio
+        opencv_imgcodecs
+        opencv_highgui
         spdlog::spdlog
 )
 

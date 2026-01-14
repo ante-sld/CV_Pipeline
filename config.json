@@ -1,5 +1,5 @@
 {
     "source" : "file",
-    "source_path" : "/home/ubuntu/Videos/video.mp4",
+    "source_path" : "/home/ubuntu/Videos/in.mp4",
     "log_level" : "quiet"
 }
