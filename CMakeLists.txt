@@ -12,10 +12,13 @@ find_package(spdlog REQUIRED CONFIG)
 
 add_executable(cv_pipeline main.cpp
         src/file_reader.cpp
-        include/IVideoSource.h
-        include/FileVideoSource.h
-        src/FileVideoSource.cpp
         include/Frame.h
+        include/FixedQueue.h
+        include/CaptureThread.h
+        src/CaptureThread.cpp
+        include/ProcessThread.h
+        src/ProcessThread.cpp
+        include/Const.h
 )
 
 target_include_directories(cv_pipeline

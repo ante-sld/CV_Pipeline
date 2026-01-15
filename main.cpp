@@ -1,16 +1,16 @@
-#include "include/file_reader.h"
-#include "FileVideoSource.h"
-#include "Frame.h"
+#include "CaptureThread.h"
+#include "FixedQueue.h"
+#include "ProcessThread.h"
+#include "file_reader.h"
 
 #include <opencv2/opencv.hpp>
-#include <spdlog/spdlog.h>
 #include <rapidjson/document.h>
+#include <spdlog/spdlog.h>
 
 #include <iostream>
 #include <string>
 
-
-int main(int argc, const char * argv[]) {
+int main(int argc, const char *argv[]) {
     spdlog::info("Starting computer vision pipeline.");
 
     std::string configJson;
@@ -20,23 +20,22 @@ int main(int argc, const char * argv[]) {
     doc.Parse(configJson.c_str());
 
     if (!doc.IsObject()) {
-        std::cerr << "Error parsing config document. Check config argument." << std::endl;
+        std::cerr << "Error parsing config document. Check config argument."
+                  << std::endl;
         return 1;
     }
 
-    FileVideoSource file_source(doc["source_path"].GetString());
+    FixedQueue<Const::QUEUE_SIZE> frame_queue;
+    // FileVideoSource file_source(frame_queue, doc["source_path"].GetString());
+    CaptureThread capture(frame_queue, doc["source_path"].GetString());
+    ProcessThread process(frame_queue);
 
-    Frame frame{};
-    while(true) {
-        frame = file_source.getFrame();
-        if(frame.image.empty()) break;  // end of video
-        spdlog::info("Displaying frame number " + std::to_string(frame.frame_id) + " with timestamp " + std::to_string(frame.timestamp));
-        cv::imshow("Video", frame.image);
-        if(cv::waitKey(30) == 27) break; // ESC to exit
-    }
+    capture.waitForFinish();
+    process.waitForFinish();
 
     cv::destroyAllWindows();
 
     spdlog::info("Finishing computer vision pipeline.");
+
     return 0;
 }

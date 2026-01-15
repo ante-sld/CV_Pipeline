@@ -9,8 +9,8 @@
 
 struct Frame {
     cv::Mat image{};
-    uint frame_id {};
+    uint frame_id{0};
     int64_t timestamp = cv::getTickCount();
 };
 
-#endif //CV_PIPELINE_FRAME_H
+#endif // CV_PIPELINE_FRAME_H
